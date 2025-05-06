@@ -7,6 +7,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -30,16 +31,38 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <IconSymbol size={18} name="house.fill" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="search"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Search',
+          tabBarIcon: ({ color }) => <FontAwesome size={18} name="search" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="(news)"
+        options={{
+          href:null,
+          title: 'News',
+          tabBarIcon: ({ color }) => <FontAwesome size={18} name="file" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="(auth)"
+        options={{
+          title: 'You',
+          tabBarIcon: ({ color }) => <FontAwesome size={18} name="user" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="(categories)/[id]"
+        options={{
+          href: null,
+        }}
+      />
+
     </Tabs>
   );
 }

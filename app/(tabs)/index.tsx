@@ -1,75 +1,100 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import CategoryGrid from '@/components/CategoryGrid';
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { FontAwesome } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { Link } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { TextInput, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+  const [text, onChangeText] = React.useState('');
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+
+  const getUser = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('user');
+      const user = jsonValue != null ? JSON.parse(jsonValue) : null;
+      console.log(user)
+    } catch (e) {
+      alert('storage empty')
+    }
+  };
+
+  const fetchFeaturedBlogs = async () => {
+    try {
+      const response = await axios.get("https://newspepperapp.in/api/blogs?is_featured=1");
+      setBlogs(response.data.data.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("https://newspepperapp.in/api/categories");
+      setCategories(response.data.data);
+      // console.log(response.data.data[0].blogs)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const [blogs, setBlogs] = useState([]);
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    fetchCategories();
+    fetchFeaturedBlogs();
+    
+  }, []);
+  return (
+    <SafeAreaProvider>
+
+      <SafeAreaView style={{ padding: 20 }}>
+        <TextInput
+
+          placeholder='Search'
+          placeholderTextColor={'gray'}
+          clearButtonMode='always'
+          onChangeText={onChangeText}
+          value={text}
+          className="px-4 py-4 mb-8 rounded-lg border border-gray-300 text-lg dark:text-gray-50"
+
+
+        />
+
+        <ThemedText type="subtitle">For You</ThemedText>
+
+
+        <View className="flex flex-row my-10 ">
+          <View className='w-1/3 items-center '>
+          <Link href="/(news)" className='dark:text-gray-100'>
+            <FontAwesome size={48} name="newspaper-o"/>
+            </Link>
+            <ThemedText>All News</ThemedText>
+            
+          </View>
+          <View className='w-1/3 items-center'>
+          <Link href="/(news)" className='dark:text-gray-100'>
+            <FontAwesome size={48} name="feed" />
+            </Link>
+            <ThemedText>My Feed</ThemedText>
+          </View>
+          <View className='w-1/3 items-center'>
+          <Link href="/search" className='dark:text-gray-100'>
+            <FontAwesome size={48} name="search" />
+            </Link>
+            <ThemedText>Search</ThemedText>
+          </View>
+        </View>
+
+        <ThemedText type="subtitle">Filter By Topic</ThemedText>
+
+        <CategoryGrid categories={categories} />
+
+      </SafeAreaView>
+    </SafeAreaProvider>
+
+  )
+}
