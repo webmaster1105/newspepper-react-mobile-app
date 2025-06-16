@@ -1,14 +1,15 @@
 import { getDomain, showTimeAgo } from '@/scripts/utilities';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { router } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList, Image, Text, View } from 'react-native';
 import { ThemedText } from './ThemedText';
 
 const Item = ({news}:{news:any}) => (
   
   <View className="flex flex-row mb-4">
-               <Image  className="w-1/4 h-[100]" source={{uri:news.image.image}} />
+              {news.image &&  <Image  className="w-1/4 h-auto" source={{uri:news.image.image}} />}
                <View className="pl-4 pr-1 py-0 w-3/4">
                <ThemedText type="subtitle" className="">{news.title}</ThemedText>
              
@@ -82,10 +83,19 @@ const [isLoading,setIsLoading] = useState(true)
 
   const [blogs,setBlogs] = useState([]);
   const [nextPageUrl,setNextPageUrl] = useState(baseUrl);
-    useEffect(() => {
-      setIsLoading(true);
-      fetchData(baseUrl);
-    }, [baseUrl]);
+     useFocusEffect(
+        useCallback(() => {
+          // Reset state when screen is focused
+          setIsLoading(true);
+          fetchData(baseUrl);
+    
+          // Optional: cleanup when screen is unfocused
+          return () => {
+            setBlogs([]);
+          };
+        }, [baseUrl])
+      );
+      
   return (
 
 <>

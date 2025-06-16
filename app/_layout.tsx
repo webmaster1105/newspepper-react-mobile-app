@@ -6,8 +6,13 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+import store from '@/store';
+import { Provider } from 'react-redux';
+
 import "@/global.css";
 import { useColorScheme } from '@/hooks/useColorScheme';
+import "@/i18n";
+import React from 'react';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -22,6 +27,9 @@ export default function RootLayout() {
     if (loaded) {
       SplashScreen.hideAsync();
     }
+
+   
+    
   }, [loaded]);
 
   if (!loaded) {
@@ -29,12 +37,16 @@ export default function RootLayout() {
   }
 
   return (
+ 
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Provider store={store}>
+      <Stack >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
+      </Provider>
     </ThemeProvider>
+   
   );
 }

@@ -1,53 +1,51 @@
 import { getDomain, showTimeAgo } from '@/scripts/utilities';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { router } from 'expo-router';
+import { Link } from 'expo-router';
 import React from 'react';
-import { Dimensions, Image, Text, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
+
+import { Feather } from '@expo/vector-icons';
+import { useWindowDimensions } from 'react-native';
 import { ThemedText } from './ThemedText';
 
 export function News({ news }: {
   news: any
 }) {
 
-  const tabBarHeight = useBottomTabBarHeight(); 
+  const { height } = useWindowDimensions();
 
   return (
-    <View style={{
-                        // padding:20,
-                                width:Dimensions.get("window").width, 
-                                height: Dimensions.get("window").height - tabBarHeight,
-                                // backgroundColor:(news.id%2==0? 'red':'green')
-                                
-                                }}>
-      <Image source={{ uri: news.image.image }} style={{ height: 200, marginBottom: 20 }} />
+    <View  style={{ height }}>
+      {news.image && <Image source={{ uri: news.image.image }} className="h-[30%]" style={[ {resizeMode: 'contain'}]}  /> }
       <View className="px-4">
-        <ThemedText type="subtitle" style={{ marginBottom: 15 }}>{news.title}</ThemedText>
+        <ThemedText type="subtitle">{news.title}</ThemedText>
+
+        <View className='my-4'>
+        <Pressable  className='px-2 py-1 bg-blue-700 self-start'>
+          <Text className='text-gray-50 '>{news.blog_category.category.name}</Text>
+        </Pressable >
+        </View>
 
 
         <ThemedText>{news.description}</ThemedText>
 
+        
+
         {
-          news.source_link && 1 &&
+          news.source_link &&
 
-          <Text
-            className="dark:text-gray-100"
-            style={{ marginTop: 20 }}
-            onTouchEnd={() => {
-              router.push(
-                {
-                  pathname: "/(tabs)/(news)/source",
-                  params: {
-                    url: news.source_link
-                  }
-                }
-              );
-            }}
+          <View className='flex-row my-4'>
+          <Text className="dark:text-gray-100">{ showTimeAgo(news.created_at) +  " via "}
 
-          >{ 
+            <Link href={"/(tabs)/source?url="+news.source_link}>{ 
             
-            showTimeAgo(news.created_at) + " | " + getDomain(news.source_link)}
+             getDomain(news.source_link)}</Link>
+             {" | "}
 
+             <Link href={"/(tabs)/source?url=https://newspepperapp.in/disclaimer"}>Disclaimer <Feather  name="info" /></Link>
           </Text>
+          
+          
+          </View>
 
 
 
@@ -59,3 +57,4 @@ export function News({ news }: {
   )
 
 }
+

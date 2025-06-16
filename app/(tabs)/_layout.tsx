@@ -8,12 +8,16 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { useTranslation } from 'react-i18next';
+
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+    const { t } = useTranslation();
 
   return (
     <Tabs
+    
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
@@ -24,45 +28,71 @@ export default function TabLayout() {
             // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
-          default: {},
+          default: {
+            //display:'none'
+            
+
+          },
         }),
       }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={18} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          title: 'Search',
-          tabBarIcon: ({ color }) => <FontAwesome size={18} name="search" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="(news)"
-        options={{
-          href:null,
-          title: 'News',
-          tabBarIcon: ({ color }) => <FontAwesome size={18} name="file" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="(auth)"
-        options={{
-          title: 'You',
-          tabBarIcon: ({ color }) => <FontAwesome size={18} name="user" color={color} />,
-        }}
-      />
-      <Tabs.Screen
+
+ 
+
+       <Tabs.Screen
         name="(categories)/[id]"
         options={{
           href: null,
         }}
+       initialParams={{id:0,fromHome:"false"}}
+      />
+      
+
+        
+<Tabs.Screen
+        name="home"
+        options={{
+          title: t('home'),
+          tabBarIcon: ({ color }) => <IconSymbol size={18} name="house.fill" color={color} />,
+        }}
+      />
+          
+
+      
+
+      
+       <Tabs.Screen
+        name="source"
+        options={{
+          href: null,
+        }}
+       // initialParams={{id:0,fromHome:"true"}}
       />
 
+      
+
+      
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: t('search'),
+          tabBarIcon: ({ color }) => <FontAwesome size={18} name="search" color={color} />,
+        }}
+      />
+      
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: t('you'),
+          tabBarIcon: ({ color }) => <FontAwesome size={18} name="user" color={color} />,
+        }}
+      />
+     
+<Tabs.Screen
+        name="(auth)"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

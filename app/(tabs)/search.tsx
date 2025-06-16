@@ -1,18 +1,14 @@
-import { View, Text, TextInput, StyleSheet, ScrollView, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { ThemedText } from '@/components/ThemedText'
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FontAwesome } from '@expo/vector-icons';
-import CategoryGrid from '@/components/CategoryGrid';
-import { Link } from 'expo-router';
 import { NewsList } from '@/components/NewsList';
+import { ThemedText } from '@/components/ThemedText';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { TextInput } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 const Search = () => {
   const [text, onChangeText] = React.useState('');
 
-
+const { t } = useTranslation();
   
 
  
@@ -38,7 +34,7 @@ const Search = () => {
 
         />
 
-        <ThemedText type="subtitle" className='mb-4'>Latest News</ThemedText>
+        <ThemedText type="subtitle" className='mb-4'>{t('latest_news')}</ThemedText>
 
 <NewsList baseUrl={"https://newspepperapp.in/api/blogs"}/>
       </SafeAreaView>

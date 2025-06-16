@@ -1,74 +1,55 @@
-import { News } from '@/components/News';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { RootState } from '@/store';
+import { fetchNewsNextPage } from '@/store/NewsSlice';
+import React from 'react';
 import { FlatList, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { News } from './News';
 
-
-export function NewsScrollView({baseUrl}:{
-    baseUrl:string
+export function NewsScrollView({url,isFromHome}: {
+  url:String
+  isFromHome:boolean
 }) {
 
-const [isLoading,setIsLoading] = useState(true)
 
-  const fetchData = async (url:string) => {
-    try {
-      const response = await axios.get(url);
+  const news = useSelector((state: RootState) => state.news)
 
-      setBlogs(response.data.data.data);
-      setNextPageUrl(response.data.data.next_page_url);
-      setIsLoading(false);
-     // Sharing.shareAsync(url)
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  const paginateData = async (url:string) => {
-    try {
-      const response = await axios.get(url);
-
-      setBlogs(blogs.concat(response.data.data.data));
-      setNextPageUrl(response.data.data.next_page_url);
-     // Sharing.shareAsync(url)
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+  const dispatch = useDispatch();
 
 
-
-  const [blogs,setBlogs] = useState([]);
-  const [nextPageUrl,setNextPageUrl] = useState(baseUrl);
-    useEffect(() => {
-      setIsLoading(true);
-      fetchData(baseUrl);
-    }, [baseUrl]);
   return (
 
-<>
-  { !isLoading &&   <FlatList
-                   data={blogs} 
-                   pagingEnabled
-                   showsVerticalScrollIndicator={false}
-                   onEndReached={()=>{if(nextPageUrl)paginateData(nextPageUrl)}}
-                   onEndReachedThreshold={0.5}
-                   keyExtractor={(item, index) => String(index)}
-                   renderItem={({item, index})=>
-                    {
-                        return <News news={item} />
-                            
-                    }
-                   }/>
-                  }
-   {               
-isLoading && <><View className="bg-gray-500 opacity-30 w-full h-[200] mb-4 " ></View>
-<View className="bg-gray-500 opacity-30 mx-4 h-[10]"></View>
-<View className="bg-gray-500 opacity-30 mx-4 h-[10] w-3/4 my-2"></View>
-<View className="bg-gray-500 opacity-30 mx-4 h-[150] my-2"></View>
-</>}
-                
+    <View >
+      {!news.loading && <FlatList
+        data={news.items}
+        decelerationRate="fast"
+        snapToAlignment="start"
+        pagingEnabled
+        // onScrollBeginDrag={onBeginScroll}
+        showsVerticalScrollIndicator={false}
+        onEndReached={() => { if (news.nextPageUrl) dispatch(fetchNewsNextPage(news.nextPageUrl)) }}
+        onEndReachedThreshold={0.5}
+        keyExtractor={(item, index) => String(index)}
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing}
+        //     onRefresh={onRefresh}
+        //   />
+        // }
+        renderItem={({ item, index }) => {
+          return <News news={item} />
+          // return <View className='h-screen' style={{backgroundColor: index%2 ? 'red' : 'green'}}></View>
 
-</>
-    
+        }
+        } />
+      }
+      {
+        news.loading && <><View className="bg-gray-500 opacity-30 w-full h-[200] mb-4 " ></View>
+          <View className="bg-gray-500 opacity-30 mx-4 h-[10]"></View>
+          <View className="bg-gray-500 opacity-30 mx-4 h-[10] w-3/4 my-2"></View>
+          <View className="bg-gray-500 opacity-30 mx-4 h-[150] my-2"></View>
+        </>}
+
+
+    </View>
+
   )
 }

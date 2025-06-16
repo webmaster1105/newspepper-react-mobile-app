@@ -1,14 +1,17 @@
-import { View, Text, TextInput, TouchableOpacity,Image } from 'react-native'
-import React, { useState } from 'react'
-import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/firebase.config';
-import { useRouter } from 'expo-router';
+import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Link, useRouter } from 'expo-router';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useState } from 'react';
+import { useTranslation } from "react-i18next";
+import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const Signin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState(null);
+    const { i18n, t } = useTranslation();
 
     const router = useRouter();
 
@@ -37,7 +40,7 @@ const Signin = () => {
             // alert('User registered Successfully!')
             if(user.emailVerified){
                 // await storeUser(user);
-                router.back()
+                router.push('/settings')
             }
             else{
                 setErrorMessage('Please verify your email before login')
@@ -53,10 +56,23 @@ const Signin = () => {
 
   return (
     <View className="flex-1 justify-center items-center px-12">
-      
-      <Image  source={require('@/assets/images/icon.png')} style={{ height:250,width:250}}/>
 
-      <Text className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-50">Sign in</Text>
+<View className="flex-row absolute top-12 right-0  justify-between px-12 py-3">
+        
+        
+         <Link href="/(news)" className='dark:text-gray-300 mr-4'>
+                    <Feather size={24} name="bell"/>
+                    </Link>
+                    
+         <Link href="/settings" className='dark:text-gray-300'>
+                    <Feather size={24} name="menu"/>
+                    </Link>
+      
+      </View>
+      
+      <Image  source={require('@/assets/images/icon.png')} className="h-[250] w-[250]" />
+
+      <Text className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-50">{t('login')}</Text>
       <View className="w-full mb-4">
         <TextInput
             placeholder='Email'
