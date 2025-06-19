@@ -11,7 +11,7 @@ export default function DetailsScreen() {
   const { id,name ,fromHome} = useLocalSearchParams();
   const url = id ? "https://newspepperapp.in/api/blogs?category_id="+id : "https://newspepperapp.in/api/blogs";
 
-console.log("data from id page",id,name,fromHome)
+
 
   const news = useSelector((state: RootState) => state.news)
 
@@ -26,7 +26,8 @@ console.log("data from id page",id,name,fromHome)
 
     useCallback(() => {
      // console.log("on focous news page", fromHome, news.items.length)
-     if (fromHome) fetchData(url);
+    //  console.log("data from id page",id,name,fromHome)
+    //  if (fromHome) fetchData(url);
 
       
       // Optional: cleanup when screen is unfocused
@@ -56,7 +57,8 @@ console.log("data from id page",id,name,fromHome)
 
   useEffect(() => {
 
-    // if (!isFromHome) fetchData(baseUrl);
+    // if (!isFromHome) 
+      fetchData(url);
 
     const subscription = AppState.addEventListener("change", nextAppState => {
      // setAppState(nextAppState);
@@ -71,7 +73,19 @@ console.log("data from id page",id,name,fromHome)
     });
 
 
-  }, [id]);
+
+
+    
+      // const onBackPress = () => {
+      //   router.push("home");
+      //   return 1;
+      // };
+
+      // const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      // return () => backHandler.remove();
+
+
+  }, [id,fromHome]);
 
   const fetchData = (url: string) => {
 
@@ -94,7 +108,7 @@ console.log("data from id page",id,name,fromHome)
   return (
     <SafeAreaProvider>
       <SafeAreaView >
- <NewsScrollView url={url} isFromHome={fromHome=="true"}/>
+ <NewsScrollView url={url} isFromHome={true}/>
  
         </SafeAreaView>
     </SafeAreaProvider>

@@ -19,6 +19,7 @@ export function NewsScrollView({url,isFromHome}: {
   return (
 
     <View >
+   
       {!news.loading && <FlatList
         data={news.items}
         decelerationRate="fast"

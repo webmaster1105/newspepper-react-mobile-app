@@ -17,7 +17,6 @@ export default function TabLayout() {
 
   return (
     <Tabs
-    
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
@@ -39,34 +38,28 @@ export default function TabLayout() {
  
 
        <Tabs.Screen
-        name="(categories)/[id]"
+        name="(categories)"
         options={{
           href: null,
         }}
-       initialParams={{id:0,fromHome:"false"}}
+       
       />
       
 
-        
-<Tabs.Screen
+        <Tabs.Screen
         name="home"
         options={{
           title: t('home'),
           tabBarIcon: ({ color }) => <IconSymbol size={18} name="house.fill" color={color} />,
         }}
       />
+
           
 
       
 
       
-       <Tabs.Screen
-        name="source"
-        options={{
-          href: null,
-        }}
-       // initialParams={{id:0,fromHome:"true"}}
-      />
+       
 
       
 

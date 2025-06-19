@@ -1,38 +1,26 @@
 import { Link } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { FlatList, Image, RefreshControl, Text, View } from 'react-native';
+import { FlatList, Image, RefreshControl, Text, TouchableOpacity } from 'react-native';
 
 
 
 const Item = ({category}:{category:any}) => (
   
-  <View className="w-1/4 mt-8 items-center">
+  <TouchableOpacity className="w-1/4 mt-8 items-center">
     {
-    category.name!="All" && <Link
+     <Link
     className='mb-2'
         href={{
           pathname: "/(categories)/[id]",
-          params: { id: category.id , name:'Latest News in '+ category.name, fromHome:"true"}
+          params: { id: category.name=="All"? 0 : category.id , name:'Latest News in '+ category.name, fromHome:Math.random()}
         }} key={category.id}>
      <Image className='w-[50] h-[50] rounded-full' source={{uri:"https://www.newspepperapp.in/uploads/category/"+category.image}} />
      </Link>
      }
-     {
-    category.name=="All" && <Link
-    className='mb-2'
-
-    href={{
-          pathname: "/(categories)/[id]",
-          params: { id: 0 , name:'Latest News in '+ category.name, fromHome:"true"}
-        }}
-    
-       key={category.id}>
-     <Image className='w-[50] h-[50] rounded-full' source={{uri:"https://www.newspepperapp.in/uploads/category/"+category.image}} />
-     </Link>
-     }
+     
     <Text className="text-gray-600 text-sm dark:text-gray-300">{category.name}</Text>
     
-  </View>
+  </TouchableOpacity>
   
 );
 
