@@ -52,7 +52,7 @@ const Settings = () => {
           }
 
         </View>
-
+<View className='hidden'>
         <Text className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">{t('settings')}</Text>
 
         {/* Language Section */}
@@ -65,7 +65,7 @@ const Settings = () => {
 
         {/* Notifications Section */}
         <View className="bg-white dark:bg-neutral-900 rounded-2xl mb-6 p-4 shadow-sm">
-          <Text className="text-gray-500 dark:text-gray-100 font-medium mb-2">{t('notifications')}</Text>
+          <Text className="text-gray-500 dark:text-gray-100 font-bold mb-2">{t('notifications')}</Text>
           <View className="flex-row justify-between items-center py-3">
             <Text className="text-gray-800 dark:text-gray-100">{t('enable_notifications')}</Text>
             <Switch
@@ -80,7 +80,7 @@ const Settings = () => {
 
         {/* Appearance Section */}
         <View className="bg-white dark:bg-neutral-900 rounded-2xl mb-6 p-4 shadow-sm">
-          <Text className="text-gray-500 font-medium mb-2 dark:text-gray-100">{t('appearance')}</Text>
+          <Text className="text-gray-500 font-bold mb-2 dark:text-gray-100">{t('appearance')}</Text>
           <View className="flex-row justify-between items-center py-3">
             <Text className="text-gray-800 dark:text-gray-100">{t('dark_mode')}</Text>
             <Switch
@@ -90,25 +90,28 @@ const Settings = () => {
               value={darkMode} onValueChange={setDarkMode} />
           </View>
         </View>
-
-        {/* Account Section */}
+</View>
+       
         {authUser &&
           <View className="bg-white dark:bg-neutral-900 rounded-2xl mb-6 p-4 shadow-sm ">
-            <Text className="text-gray-500 font-medium mb-2 dark:text-gray-100">{t('account')}</Text>
+            <Text className="text-gray-500 font-bold mb-2 dark:text-gray-100">{t('account')}</Text>
 
-            <TouchableOpacity className=" py-3 border-b border-gray-200 dark:border-neutral-950">
-              <Text className="text-gray-800 dark:text-gray-100">{t('profile')}</Text>
-            </TouchableOpacity>
+            
 
-            <TouchableOpacity className="py-3 border-b border-gray-200 dark:border-neutral-950">
-              <Text className="text-gray-800 dark:text-gray-100">{t('change_password')}</Text>
+            <TouchableOpacity className="py-3 border-b border-gray-200 dark:border-neutral-950"
+            >
+
+              <Link  href="/(tabs)/(auth)/reset-password"
+                        >
+                         <Text className="text-gray-800 dark:text-gray-100">{t('change_password')}</Text>
+                          </Link>
+              
             </TouchableOpacity>
 
             <TouchableOpacity className="py-3" onPress={() => {
 
               return signOut(auth).then(() => {
                 setAuthUser(null);
-                console.log('User signed out!')
               });
               // router.push("/");
 

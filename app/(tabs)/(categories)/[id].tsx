@@ -2,7 +2,7 @@ import { NewsScrollView } from '@/components/NewsScrollView';
 import { RootState } from '@/store';
 import { fetchNews } from '@/store/NewsSlice';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AppState, BackHandler } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -65,7 +65,7 @@ export default function DetailsScreen() {
       if (nextAppState === 'background') {
         // App is in background
         console.log("app in background")
-        //setTimeout(() => { onRefresh(); console.log("on refresh called")}, 180000);
+        setTimeout(() => { fetchData(url); console.log("on refresh called")}, 180000);
 
       } else if (nextAppState === 'active') {
         // App is in foreground
@@ -92,23 +92,14 @@ export default function DetailsScreen() {
     dispatch(fetchNews(url))
   };
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    fetchData(url);
-
-
-    // Simulate fetching new data (e.g., from API)
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 1000);
-  }, []);
+  
 
 
   
   return (
     <SafeAreaProvider>
       <SafeAreaView >
- <NewsScrollView url={url} isFromHome={true}/>
+ <NewsScrollView url={url} isFromHome={true} onRefresh={()=>fetchData(url)}/>
  
         </SafeAreaView>
     </SafeAreaProvider>

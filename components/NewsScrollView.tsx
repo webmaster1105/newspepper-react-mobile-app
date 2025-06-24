@@ -1,19 +1,32 @@
 import { RootState } from '@/store';
 import { fetchNewsNextPage } from '@/store/NewsSlice';
-import React from 'react';
-import { FlatList, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { FlatList, RefreshControl, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { News } from './News';
 
-export function NewsScrollView({url,isFromHome}: {
+export function NewsScrollView({url,isFromHome,onRefresh}: {
   url:String
   isFromHome:boolean
+  onRefresh:any
 }) {
 
-
+const [refreshing, setRefreshing] = useState(false);
   const news = useSelector((state: RootState) => state.news)
 
   const dispatch = useDispatch();
+
+  const handleRefresh = useCallback(() => {
+      setRefreshing(true);
+      // fetchData(url);
+  
+      onRefresh();
+  
+      // Simulate fetching new data (e.g., from API)
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 1000);
+    }, []);
 
 
   return (
@@ -30,11 +43,11 @@ export function NewsScrollView({url,isFromHome}: {
         onEndReached={() => { if (news.nextPageUrl) dispatch(fetchNewsNextPage(news.nextPageUrl)) }}
         onEndReachedThreshold={0.5}
         keyExtractor={(item, index) => String(index)}
-        // refreshControl={
-        //   <RefreshControl refreshing={refreshing}
-        //     onRefresh={onRefresh}
-        //   />
-        // }
+        refreshControl={
+          <RefreshControl refreshing={refreshing}
+            onRefresh={handleRefresh}
+          />
+        }
         renderItem={({ item, index }) => {
           return <News news={item} />
           // return <View className='h-screen' style={{backgroundColor: index%2 ? 'red' : 'green'}}></View>
