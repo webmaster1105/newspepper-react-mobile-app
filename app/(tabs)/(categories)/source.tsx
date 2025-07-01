@@ -1,3 +1,4 @@
+import BackButton from '@/components/BackButton';
 import { RootState } from '@/store/store';
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
@@ -26,6 +27,7 @@ const Source = () => {
     
     <SafeAreaProvider>
     <SafeAreaView style={{ flex:1 }}>
+       <BackButton screen='back'/>
     <WebView 
       source={{ uri: param.url }}
     />

@@ -1,8 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity,Image } from 'react-native'
-import React, { useState } from 'react'
-import { createUserWithEmailAndPassword, sendEmailVerification, getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { PasswordField } from '@/components/PasswordField';
+import { TextField } from '@/components/TextField';
 import { auth } from '@/firebase.config';
 import { useRouter } from 'expo-router';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import React, { useState } from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 
 
@@ -49,26 +51,15 @@ const Signup = () => {
        <Image  source={require('@/assets/images/icon.png')} style={{ height:250,width:250}}/>
       <Text className="text-3xl font-bold text-gray-800 dark:text-gray-50 mb-4">Sign up</Text>
       <View className="w-full mb-4">
-        <TextInput
-            placeholder='Email'
-            value={email}
-            onChangeText={handleInputChange(setEmail)}
-            placeholderTextColor={'gray'}
-            keyboardType='email-address'
-            className="px-3 py-3 rounded-lg border border-gray-300 dark:text-gray-50 focus:border-blue-500 focus:ring focus:ring-blue-200"
-            />
+        <TextField
+                  placeholder='Email'
+                  value={email}
+                  
+                  onChangeText={handleInputChange(setEmail)}
+                 />
       </View>
       <View className="w-full mb-4">
-        <TextInput
-            placeholder='Password'
-            value={password}
-            placeholderTextColor={'gray'}
-            onChangeText={handleInputChange(setPassword)}
-            secureTextEntry
-
-            
-            className="px-3 py-3 rounded-lg border border-gray-300 dark:text-gray-50 focus:border-blue-500 focus:ring focus:ring-blue-200"
-            />
+         <PasswordField value={password} onChangeText={handleInputChange(setPassword)} />
       </View>
       {
         errorMessage && (
@@ -85,7 +76,7 @@ const Signup = () => {
       !emailSent && (
         <TouchableOpacity
         onPress={handleSignup}
-        className="bg-blue-500 py-3 px-10 rounded-lg shadow-md w-full"
+        className="bg-blue-500 py-5 px-10 rounded-lg shadow-md w-full"
       >
         <Text className="text-center text-white text-lg font-semibold">Sign up</Text>
       </TouchableOpacity>

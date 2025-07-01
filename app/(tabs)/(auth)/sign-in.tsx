@@ -1,3 +1,5 @@
+import { PasswordField } from '@/components/PasswordField';
+import { TextField } from '@/components/TextField';
 import { auth } from '@/firebase.config';
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -5,7 +7,7 @@ import { Link, useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 const Signin = () => {
   const [email, setEmail] = useState('');
@@ -74,38 +76,26 @@ const Signin = () => {
 
       <Text className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-50">{t('login')}</Text>
       <View className="w-full mb-4">
-        <TextInput
+        <TextField
           placeholder='Email'
           value={email}
-          placeholderTextColor={'gray'}
-          style={{
-            textAlignVertical: 'top',
-
-
-          }}
+          
           onChangeText={handleInputChange(setEmail)}
-          keyboardType='email-address'
-          className="px-3 py-3 rounded-lg border border-gray-300 dark:text-gray-50 focus:border-blue-500 focus:ring focus:ring-blue-200"
-        />
+         />
       </View>
       <View className="w-full mb-4">
-        <TextInput
-          placeholder='Password'
-          value={password}
-          placeholderTextColor={'gray'}
-          onChangeText={handleInputChange(setPassword)}
-          secureTextEntry
-          className=" px-3 py-3 rounded-lg border border-gray-300 text-gray-900 dark:text-gray-50 focus:border-blue-500 focus:ring focus:ring-blue-200"
-        />
+        <PasswordField value={password} onChangeText={handleInputChange(setPassword)} />
       </View>
       {
         errorMessage && (
           <Text className="text-red-500 mb-4 text-center">{errorMessage}</Text>
         )
       }
+
+     
       <TouchableOpacity
         onPress={handleLogin}
-        className="bg-blue-500 py-3 px-10 rounded-lg shadow-md w-full"
+        className="bg-blue-500 py-5 px-10 rounded-lg shadow-md w-full"
       >
         <Text className="text-center text-white text-lg font-semibold">Sign in</Text>
       </TouchableOpacity>

@@ -1,6 +1,6 @@
-import { Tabs } from 'expo-router';
+import { router, Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Button, Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -17,6 +17,8 @@ export default function TabLayout() {
 
   return (
     <Tabs
+
+    initialRouteName='(categories)'
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
@@ -44,10 +46,17 @@ export default function TabLayout() {
         }}
        
       />
+
+      <Tabs.Screen
+        name="(auth)"
+        options={{
+          href: null,
+        }}
+      />
       
 
         <Tabs.Screen
-        name="home"
+        name="index"
         options={{
           title: t('home'),
           tabBarIcon: ({ color }) => <IconSymbol size={18} name="house.fill" color={color} />,
@@ -71,6 +80,20 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <FontAwesome size={18} name="search" color={color} />,
         }}
       />
+
+      <Tabs.Screen
+        name="WebPage"
+        options={{
+          href: null,
+          // headerShown:true,
+          headerLeft: () => (
+                <Button
+                  onPress={() => router.push("/settings")} // Custom navigation
+                  title="<"
+                />
+              ),
+        }}
+      />
       
       <Tabs.Screen
         name="settings"
@@ -80,12 +103,7 @@ export default function TabLayout() {
         }}
       />
      
-<Tabs.Screen
-        name="(auth)"
-        options={{
-          href: null,
-        }}
-      />
+
     </Tabs>
   );
 }

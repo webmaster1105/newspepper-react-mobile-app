@@ -1,9 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity,Image } from 'react-native'
-import React, { useState } from 'react'
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { TextField } from '@/components/TextField';
 import { auth } from '@/firebase.config';
-import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import React, { useState } from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 const ResetPassword = () => {
     const [email, setEmail] = useState('');
@@ -51,19 +52,12 @@ const ResetPassword = () => {
 
       <Text className="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-50">Reset Password</Text>
       <View className="w-full mb-4">
-        <TextInput
-            placeholder='Email'
-            placeholderTextColor={'gray'}
-            value={email}
-            style={{
-              textAlignVertical: 'top',
-              
-            
-          }}
-            onChangeText={handleInputChange(setEmail)}
-            keyboardType='email-address'
-           className="px-3 py-3 rounded-lg border border-gray-300 dark:text-gray-50 focus:border-blue-500 focus:ring focus:ring-blue-200"
-        />
+        <TextField
+                  placeholder='Email'
+                  value={email}
+                  
+                  onChangeText={handleInputChange(setEmail)}
+                 />
       </View>
      
       {
@@ -80,7 +74,7 @@ const ResetPassword = () => {
         <TouchableOpacity
         disabled={(successMessage && true)}
         onPress={handleLogin}
-        className="bg-blue-500 disabled:bg-gray-500 py-3 px-10 rounded-lg shadow-md w-full"
+        className="bg-blue-500 disabled:bg-gray-500 py-5 px-10 rounded-lg shadow-md w-full"
       >
         <Text className="text-center text-white text-lg font-semibold">Reset</Text>
       </TouchableOpacity>

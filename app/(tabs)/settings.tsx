@@ -6,7 +6,7 @@ import { Link } from 'expo-router';
 import { signOut } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Switch, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
+import { Alert, ScrollView, Switch, Text, TouchableOpacity, View, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Settings = () => {
@@ -29,6 +29,61 @@ const Settings = () => {
     });
 
   }, []);
+
+
+const deleteConfirmation = () =>{
+
+  Alert.alert(
+      "Confirm Delete Account", // Title of the alert
+      "Are you sure you want to proceed?", // Message of the alert
+      [
+        {
+          text: "No", // Text for the first button
+          onPress: () => console.log("No Pressed"), // Callback for "No" button
+          style: "cancel" // Style for the "No" button (often makes it a "cancel" style)
+        },
+        {
+          text: "Yes", // Text for the second button
+          onPress: () => 
+            {
+              console.log("Yes Pressed")
+              deleteCurrentUser()
+
+            }
+           // Callback for "Yes" button
+        }
+      ],
+      { cancelable: true } // Prevents dismissing the alert by tapping outside (optional)
+    );
+  
+  
+}
+
+  const deleteCurrentUser = async () => {
+  
+  const user = auth.currentUser;
+
+  if (user) {
+    try {
+      //await user.delete();
+      signOut(auth).then(() => {
+                setAuthUser(null);
+              });
+      console.log('User account deleted successfully.');
+      // Navigate the user to a different screen (e.g., login screen)
+    } catch (error) {
+      if (error.code === 'auth/requires-recent-login') {
+        console.log('Re-authentication required to delete account.');
+        // Prompt user to re-authenticate (e.g., ask for password)
+        // Then try deleting again after successful re-authentication.
+      } else {
+        console.error('Error deleting user:', error);
+      }
+    }
+  } else {
+    console.log('No user is currently signed in.');
+  }
+};
 
   return (
     <SafeAreaView className="flex-1">
@@ -125,8 +180,28 @@ const Settings = () => {
                 />   Sign Out</Text>
 
             </TouchableOpacity>
+            <TouchableOpacity className="py-3" onPress={deleteConfirmation}>
+
+
+              <Text className={"font-bold text-red-500 "}>
+                <FontAwesome
+                  name={'trash'}
+                  size={24}
+                />  Delete Account</Text>
+
+            </TouchableOpacity>
           </View>
         }
+
+<View className="flex-1 justify-center items-center px-12">
+       <Text className="dark:text-gray-100">
+
+            <Link href={"/WebPage?url=https://newspepperapp.in/privacy-policy"}>Privacy Policy</Link>
+             {" | "}
+
+             <Link href={"/WebPage?url=https://newspepperapp.in/terms-of-usage"}>Terms of usage</Link>
+          </Text>
+                </View>
       </ScrollView>
     </SafeAreaView>
   );

@@ -1,3 +1,4 @@
+import BackButton from '@/components/BackButton';
 import { NewsScrollView } from '@/components/NewsScrollView';
 import { RootState } from '@/store';
 import { fetchNews } from '@/store/NewsSlice';
@@ -33,7 +34,7 @@ export default function DetailsScreen() {
       // Optional: cleanup when screen is unfocused
 
       const onBackPress = () => {
-        router.push("home");
+        router.push("/(tabs)");
         return true;
       };
 
@@ -99,6 +100,7 @@ export default function DetailsScreen() {
   return (
     <SafeAreaProvider>
       <SafeAreaView >
+        <BackButton screen='/(tabs)'/>
  <NewsScrollView url={url} isFromHome={true} onRefresh={()=>fetchData(url)}/>
  
         </SafeAreaView>
