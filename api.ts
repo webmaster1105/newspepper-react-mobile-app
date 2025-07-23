@@ -5,7 +5,7 @@ export const get = async (url:string) => {
         const response = 
         	await axios.get(url);
 
-            console.log("callig api")
+            console.log("calling api", url)
         return response.data;
     } catch (error) {
         throw error;

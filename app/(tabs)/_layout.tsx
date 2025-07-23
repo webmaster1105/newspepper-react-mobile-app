@@ -1,4 +1,4 @@
-import { router, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import React from 'react';
 import { Button, Platform } from 'react-native';
 
@@ -88,7 +88,7 @@ export default function TabLayout() {
           // headerShown:true,
           headerLeft: () => (
                 <Button
-                  onPress={() => router.push("/settings")} // Custom navigation
+                  onPress={() => ush("/settings")} // Custom navigation
                   title="<"
                 />
               ),

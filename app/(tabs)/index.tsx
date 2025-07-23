@@ -2,15 +2,16 @@ import CategoryGrid from '@/components/CategoryGrid';
 import { ThemedText } from '@/components/ThemedText';
 import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
-import { Link, useFocusEffect } from 'expo-router';
+import { Link, useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BackHandler, TextInput, TouchableOpacity, View } from 'react-native';
+import { BackHandler, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   const [text, onChangeText] = React.useState('');
   const { t } = useTranslation();
+  const router = useRouter()
 
    useFocusEffect(
       useCallback(() => {
@@ -74,7 +75,7 @@ export default function HomeScreen() {
                 
               
              
-        <TextInput
+        {/* <TextInput
 
           placeholder={t('search')}
           placeholderTextColor={'gray'}
@@ -84,9 +85,18 @@ export default function HomeScreen() {
           className="px-4 py-4 mb-8 rounded-lg border border-gray-300 text-lg dark:text-gray-50"
 
 
-        />
+        /> */}
 
-        <ThemedText type="subtitle" className='dark:text-gray-300'>{t('for_you')}</ThemedText>
+    
+{/* 
+         <SearchField onSearch={(q) => {
+          router.push({
+          pathname: "/search",
+          params: { query: q}
+        });
+         }} /> */}
+
+        <ThemedText type="subtitle" className='dark:text-gray-300 mt-10'>{t('for_you')}</ThemedText>
 
 
         <View className="flex flex-row my-8 ">

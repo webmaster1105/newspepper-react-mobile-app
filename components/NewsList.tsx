@@ -1,9 +1,11 @@
 import { getDomain, showTimeAgo } from '@/scripts/utilities';
-import { useFocusEffect } from '@react-navigation/native';
-import axios from 'axios';
+import { RootState } from '@/store';
+import { fetchNews, fetchNewsNextPage } from '@/store/NewsSlice';
 import { router } from 'expo-router';
-import React, { useCallback, useState } from 'react';
-import { FlatList, Image, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList, Image, Pressable, RefreshControl, Text, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import NoData from './NoData';
 import { ThemedText } from './ThemedText';
 
 const Item = ({news}:{news:any}) => (
@@ -11,7 +13,7 @@ const Item = ({news}:{news:any}) => (
   <View className="flex flex-row mb-4">
               {news.image &&  <Image  className="w-1/4 h-auto" source={{uri:news.image.image}} />}
                <View className="pl-4 pr-1 py-0 w-3/4">
-               <ThemedText type="subtitle" className="">{news.title}</ThemedText>
+               <ThemedText  className="text-lg font-semibold">{news.title}</ThemedText>
              
              
             
@@ -20,7 +22,7 @@ const Item = ({news}:{news:any}) => (
              news.source_link && 
              
                               <Text
-                              className="dark:text-gray-100"
+                              className="dark:text-gray-100 text-sm"
                               onTouchEnd={() => {
                                       router.push(
                                         {
@@ -48,69 +50,75 @@ const Item = ({news}:{news:any}) => (
 
 
 
-export function NewsList({baseUrl}:{
-    baseUrl:string
-}) {
+export function NewsList({url}:{url:string}) {
 
 const [isLoading,setIsLoading] = useState(true)
+const news = useSelector((state: RootState) => state.news)
+const dispatch = useDispatch();
+const [refreshing, setRefreshing] = useState(false);
 
-  const fetchData = async (url:string) => {
-    try {
-      const response = await axios.get(url);
+useEffect(() => {
+   dispatch(fetchNews(url))
+  }, [url]);
 
-      setBlogs(response.data.data.data);
-      setNextPageUrl(response.data.data.next_page_url);
-      setIsLoading(false);
-     // Sharing.shareAsync(url)
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+  
 
-  const paginateData = async (url:string) => {
-    try {
-      const response = await axios.get(url);
 
-      setBlogs([...blogs, ...response.data.data.data]);
-      setNextPageUrl(response.data.data.next_page_url);
-     // Sharing.shareAsync(url)
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
+ const handleRefresh = useCallback(() => {
+      setRefreshing(true);
+      // fetchData(url);
+  dispatch(fetchNews(url))
+      // Simulate fetching new data (e.g., from API)
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 1000);
+    }, []);
 
 
   const [blogs,setBlogs] = useState([]);
-  const [nextPageUrl,setNextPageUrl] = useState(baseUrl);
-     useFocusEffect(
-        useCallback(() => {
-          // Reset state when screen is focused
-          setIsLoading(true);
-          fetchData(baseUrl);
+    //  useFocusEffect(
+    //     useCallback(() => {
+    //       // Reset state when screen is focused
+    //       setIsLoading(true);
+    //       fetchData(baseUrl);
     
-          // Optional: cleanup when screen is unfocused
-          return () => {
-            setBlogs([]);
-          };
-        }, [baseUrl])
-      );
+    //       // Optional: cleanup when screen is unfocused
+    //       return () => {
+    //         setBlogs([]);
+    //       };
+    //     }, [baseUrl])
+    //   );
       
   return (
 
 <>
-  { !isLoading &&   <FlatList
-                   data={blogs} 
+  { !news.loading &&   <FlatList
+                   data={news.items} 
                    pagingEnabled
+                   decelerationRate="fast"
+        snapToAlignment="start"
                    showsVerticalScrollIndicator={false}
-                   onEndReached={()=>{if(nextPageUrl)paginateData(nextPageUrl)}}
-                   onEndReachedThreshold={0.5}
+                  //  onEndReached={()=>{if(nextPageUrl)paginateData(nextPageUrl)}}
+                   onEndReached={() => { if (news.nextPageUrl) dispatch(fetchNewsNextPage(news.nextPageUrl)) }}
+                   onEndReachedThreshold={0.6}
                    keyExtractor={(item, index) => String(index)}
+                   ListEmptyComponent={<NoData/>}
+                   refreshControl={
+                             <RefreshControl refreshing={refreshing}
+                               onRefresh={()=> handleRefresh}
+                             />
+                           }
                    renderItem={({item, index})=>
                     {
                         return (
-                        
-                            <Item news={item} />
+                         <Pressable  onPress={ () =>  router.push({
+          pathname: "/(tabs)/(categories)/[id]",
+          params: { id:0, searchURL:url, index:index,fromHome:Math.random()}
+        })
+        }>
+                          <Item news={item} />
+                         </Pressable >
+                           
                            
                             
                             )
@@ -118,7 +126,7 @@ const [isLoading,setIsLoading] = useState(true)
                    }/>
                   }
    {               
-isLoading && <FlatList
+news.loading && <FlatList
                    data={[1,2,3,4,5,6,7,8,9,10]} 
 
                    renderItem={({item, index})=>
@@ -126,12 +134,12 @@ isLoading && <FlatList
                         return (
                         
                             <>
-                            <View className="opacity-30 flex flex-row mb-4" >
-                            <View className="bg-gray-500 opacity-30 w-1/4 h-[100]"></View>
-<View className="opacity-30 mx-4 h-[100] w-3/4">
-<View className="bg-gray-500 opacity-30 mx-4 h-[10] my-2"></View>
-<View className="bg-gray-500 opacity-30 mx-4 h-[10] my-2"></View>
-<View className="bg-gray-500 opacity-30 mx-4 h-[10] my-2"></View>
+                            <View className="opacity-70 flex flex-row mb-4" >
+                            <View className="bg-gray-300 opacity-70 w-1/4 h-[100]"></View>
+<View className="opacity-70 mx-4 h-[100] w-3/4">
+<View className="bg-gray-300 opacity-70 mx-4 h-[10] my-2"></View>
+<View className="bg-gray-300 opacity-70 mx-4 h-[10] my-2"></View>
+<View className="bg-gray-300 opacity-70 mx-4 h-[10] my-2"></View>
 </View>
 
                             </View>

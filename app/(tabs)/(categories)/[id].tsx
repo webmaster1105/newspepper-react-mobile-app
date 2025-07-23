@@ -1,47 +1,43 @@
 import BackButton from '@/components/BackButton';
 import { NewsScrollView } from '@/components/NewsScrollView';
-import { RootState } from '@/store';
 import { fetchNews } from '@/store/NewsSlice';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { AppState, BackHandler } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 export default function DetailsScreen() {
-  const { id,name ,fromHome} = useLocalSearchParams();
-  const url = id ? "https://newspepperapp.in/api/blogs?category_id="+id : "https://newspepperapp.in/api/blogs";
+  const { id,name ,fromHome, searchURL,index=0} = useLocalSearchParams();
+  let url = id ? "https://newspepperapp.in/api/blogs?category_id="+id : "https://newspepperapp.in/api/blogs";
+  // const defaultIndex = parseInt(index);
+  
 
 
 
-  const news = useSelector((state: RootState) => state.news)
+  // const news = useSelector((state: RootState) => state.news)
 
   const dispatch = useDispatch();
 
-   const [refreshing, setRefreshing] = useState(false);
+  //  const [refreshing, setRefreshing] = useState(false);
   
-    const [appState, setAppState] = useState(AppState.currentState);
+  //   const [appState, setAppState] = useState(AppState.currentState);
 
 
  useFocusEffect(
 
     useCallback(() => {
-     // console.log("on focous news page", fromHome, news.items.length)
-    //  console.log("data from id page",id,name,fromHome)
-    //  if (fromHome) fetchData(url);
-
-      
-      // Optional: cleanup when screen is unfocused
 
       const onBackPress = () => {
-        router.push("/(tabs)");
+        if(index) router.push("/(tabs)/search");
+        else router.push("/(tabs)");
         return true;
       };
 
       const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
       return () => backHandler.remove();
 
-    }, [id])
+    }, [id,index])
   );
 
 
@@ -57,16 +53,24 @@ export default function DetailsScreen() {
  
 
   useEffect(() => {
-
-    // if (!isFromHome) 
-      fetchData(url);
-
+    if (searchURL) url = searchURL; 
+     
+      if(!index)fetchData(url);
+ 
     const subscription = AppState.addEventListener("change", nextAppState => {
      // setAppState(nextAppState);
       if (nextAppState === 'background') {
         // App is in background
         console.log("app in background")
-        setTimeout(() => { fetchData(url); console.log("on refresh called")}, 180000);
+        setTimeout(() => { 
+          router.push({
+                    pathname: "/(tabs)/(categories)/[id]",
+                    params: { id:id, fromHome:Math.random()}
+                  })
+ 
+
+          
+        }, 6000);
 
       } else if (nextAppState === 'active') {
         // App is in foreground
@@ -77,20 +81,13 @@ export default function DetailsScreen() {
 
 
     
-      // const onBackPress = () => {
-      //   router.push("home");
-      //   return 1;
-      // };
-
-      // const backHandler = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      // return () => backHandler.remove();
 
 
-  }, [id,fromHome]);
+  }, [fromHome,index,id]);
 
   const fetchData = (url: string) => {
 
-    dispatch(fetchNews(url))
+if( id!=undefined) dispatch(fetchNews(url))
   };
 
   
@@ -101,7 +98,7 @@ export default function DetailsScreen() {
     <SafeAreaProvider>
       <SafeAreaView >
         <BackButton screen='/(tabs)'/>
- <NewsScrollView url={url} isFromHome={true} onRefresh={()=>fetchData(url)}/>
+ <NewsScrollView url={url} isFromHome={true} onRefresh={()=>fetchData(url)} index={parseInt(index)}/>
  
         </SafeAreaView>
     </SafeAreaProvider>

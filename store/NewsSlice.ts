@@ -12,13 +12,11 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 // Async thunks
 export const fetchNews = createAsyncThunk('fetchNews', async (url:string) => {
   const response = await get(url);
-  // console.log(response.data.next_page_url)
   return response.data;
 });
 
 export const fetchNewsNextPage = createAsyncThunk('fetchNewsNextPage', async (url:string) => {
   const response = await get(url);
-  // console.log(response.data.next_page_url)
   return response.data;
 });
 
@@ -38,7 +36,6 @@ const newsSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      console.log("resetting news ")
       state.items = []
     },
   },
@@ -58,7 +55,6 @@ const newsSlice = createSlice({
         state.error = action.error.message || "";
       })
       .addCase(fetchNewsNextPage.fulfilled, (state, action) => {
-         console.log("pagination")
         state.items.push(...action.payload.data);
         state.nextPageUrl = action.payload.next_page_url
 

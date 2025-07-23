@@ -15,8 +15,8 @@ export function News({ news }: {
 
   return (
     <View  style={{ height }}>
-      {news.image && <Image source={{ uri: news.image.image }} className="h-[30%]" style={[ {resizeMode: 'contain'}]}  /> }
-      <View className="px-4">
+      {news.image && <Image source={{ uri: news.image.image }} className="h-[240]" style={[ {resizeMode: 'cover'}]}  /> }
+      <View className="p-4">
         <ThemedText type="subtitle">{news.title}</ThemedText>
 
         <View className='my-4'>
