@@ -64,7 +64,7 @@ export function NewsScrollView({ url, isFromHome, onRefresh, index }: {
         initialScrollIndex={0}
         showsVerticalScrollIndicator={false}
         onEndReached={() => { if (news.nextPageUrl) dispatch(fetchNewsNextPage(news.nextPageUrl)) }}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.4}
         keyExtractor={(item, index) => String(index)}
         refreshControl={
           <RefreshControl refreshing={refreshing}

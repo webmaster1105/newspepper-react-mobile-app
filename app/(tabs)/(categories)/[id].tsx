@@ -2,27 +2,21 @@ import BackButton from '@/components/BackButton';
 import { NewsScrollView } from '@/components/NewsScrollView';
 import { fetchNews } from '@/store/NewsSlice';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import React, { useCallback, useEffect } from 'react';
-import { AppState, BackHandler } from 'react-native';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { AppState, AppStateStatus, BackHandler } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch } from 'react-redux';
 
 export default function DetailsScreen() {
-  const { id,name ,fromHome, searchURL,index=0} = useLocalSearchParams();
+  const { id,name ,fromHome, searchURL,index} = useLocalSearchParams();
   let url = id ? "https://newspepperapp.in/api/blogs?category_id="+id : "https://newspepperapp.in/api/blogs";
+  
+  
   // const defaultIndex = parseInt(index);
   
 
 
-
-  // const news = useSelector((state: RootState) => state.news)
-
   const dispatch = useDispatch();
-
-  //  const [refreshing, setRefreshing] = useState(false);
-  
-  //   const [appState, setAppState] = useState(AppState.currentState);
-
 
  useFocusEffect(
 
@@ -42,9 +36,29 @@ export default function DetailsScreen() {
 
 
 
-  
+  const appState = useRef(AppState.currentState);
+  const backgroundTime = useRef<number | null>(null);
 
- 
+const handleAppStateChange = (nextState: AppStateStatus) => {
+    if (appState.current === 'active' && nextState === 'background') {
+      backgroundTime.current = Date.now();
+    }
+
+    if (
+      appState.current.match(/background|inactive/) &&
+      nextState === 'active'
+    ) {
+      const now = Date.now();
+      if (backgroundTime.current && now - backgroundTime.current > 6000) {
+if(!index)fetchData(url)
+console.log("resume",index)
+
+      }
+      backgroundTime.current = null;
+    }
+
+    appState.current = nextState;
+  }; 
 
 
 
@@ -56,32 +70,36 @@ export default function DetailsScreen() {
     if (searchURL) url = searchURL; 
      
       if(!index)fetchData(url);
- 
-    const subscription = AppState.addEventListener("change", nextAppState => {
-     // setAppState(nextAppState);
-      if (nextAppState === 'background') {
-        // App is in background
-        console.log("app in background")
-        setTimeout(() => { 
-          router.push({
-                    pathname: "/(tabs)/(categories)/[id]",
-                    params: { id:id, fromHome:Math.random()}
-                  })
- 
 
+ 
+//     const subscription = AppState.addEventListener("change", nextAppState => {
+//      // setAppState(nextAppState);
+//       if (nextAppState === 'background') {
+//         // App is in background
+//         console.log("app in background")
+//        const timeout = setTimeout(() => { 
+//           console.log("after timeouut ", id)
+//           // router.push({
+//           //           pathname: "/(tabs)/(categories)/[id]",
+//           //           params: { id:id, fromHome:Math.random()}
+//           //         })
+
+//           fetchData(url)
+ 
+//  clearTimeout(timeout)
           
-        }, 6000);
+//         }, 6000);
 
-      } else if (nextAppState === 'active') {
-        // App is in foreground
-      }
-    });
+//       } else if (nextAppState === 'active') {
+//         // App is in foreground
+//       }
+//     });
 
-
+const subscription = AppState.addEventListener("change", handleAppStateChange)
 
 
     
-
+return () => subscription.remove();
 
   }, [fromHome,index,id]);
 
@@ -97,7 +115,7 @@ if( id!=undefined) dispatch(fetchNews(url))
   return (
     <SafeAreaProvider>
       <SafeAreaView >
-        <BackButton screen='/(tabs)'/>
+        <BackButton screen={index==0? '/(tabs)' : '/(tabs)/search'}/>
  <NewsScrollView url={url} isFromHome={true} onRefresh={()=>fetchData(url)} index={parseInt(index)}/>
  
         </SafeAreaView>
