@@ -52,7 +52,7 @@ export default function ShareNews({ news }: {
       </Pressable> */}
 
      <Pressable  className='px-2 py-1'  onPress={shareCombinedImage}>
-                <Text className='text-gray-50 '><Feather  name="share-2" size={20}/></Text>
+                <Text className='dark:text-gray-100 '><Feather  name="share-2" size={20}/></Text>
               </Pressable >
               
 
@@ -63,13 +63,23 @@ export default function ShareNews({ news }: {
         style={styles.hiddenView}
       >
         <Image
-          source={{ uri: news.image.image }}
+          source={{ uri: news.image?.image }}
           style={styles.image}
           onLoadEnd={() => setImageLoaded(true)}
           resizeMode="cover"
         />
         <Text className='text-gray-800 text-lg font-bold px-4'>{news.title}</Text>
         <Text className='text-gray-800 text-sm px-4 mb-8'>{news.description}</Text>
+
+        <View className='flex-1 justify-center items-center'>
+<Text className='text-gray-800 text-sm text-center pt-10'>Powered by</Text>
+        <Image
+          source={require('../assets/images/icon.png')}
+          className="w-16 h-16 "
+        />
+        </View>
+        
+
       </View>
     </View>
   );

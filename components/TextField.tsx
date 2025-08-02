@@ -7,7 +7,7 @@ export const TextField = ({
   value,
   onChangeText,
   placeholder = "",
-}) => {
+}:{value:string,onChangeText:()=>void,placeholder:string}) => {
 
   return (
     <View className="flex-row items-center border border-gray-300 rounded-lg px-4 py-2 bg-gray-50 dark:bg-black">

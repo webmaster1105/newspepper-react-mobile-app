@@ -53,6 +53,13 @@ export default function TabLayout() {
           href: null,
         }}
       />
+
+      <Tabs.Screen
+        name="SavedNewsScrollList"
+        options={{
+          href: null,
+        }}
+      />
       
 
         <Tabs.Screen

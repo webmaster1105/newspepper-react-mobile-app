@@ -1,7 +1,7 @@
+import { get } from '@/api';
 import CategoryGrid from '@/components/CategoryGrid';
 import { ThemedText } from '@/components/ThemedText';
 import { FontAwesome } from '@expo/vector-icons';
-import axios from 'axios';
 import { Link, useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -52,8 +52,8 @@ export default function HomeScreen() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("https://newspepperapp.in/api/categories");
-      setCategories(response.data.data);
+      const response = await get("https://newspepperapp.in/api/categories");
+      setCategories(response.data);
       // console.log(response.data.data[0].blogs)
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -73,7 +73,8 @@ export default function HomeScreen() {
 
       <SafeAreaView style={{ padding: 20 }}>
                 
-              
+            
+ 
              
         {/* <TextInput
 
