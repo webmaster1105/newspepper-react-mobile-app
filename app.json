@@ -6,6 +6,11 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "newsapp",
+    "notification": {
+          "icon": "./assets/images/icon96.png",
+          "color": "#f3f4f6" 
+        },
+
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -35,12 +40,10 @@
           "backgroundColor": "#ffffff"
         }
       ],
-
-      
-      
       "expo-localization",
       "expo-notifications",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-facebook"
     ],
     "experiments": {
       "typedRoutes": true

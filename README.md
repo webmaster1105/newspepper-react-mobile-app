@@ -53,5 +53,6 @@ Join our community of developers creating universal apps.
 ```bash
 eas build --profile production --platform android 
 eas build -p android --profile preview
+eas build -p android --profile development
 ```
  

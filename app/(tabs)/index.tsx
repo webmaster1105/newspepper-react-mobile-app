@@ -60,7 +60,6 @@ export default function HomeScreen() {
     }
   };
 
-  const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     // dispatch(resetNews()) 

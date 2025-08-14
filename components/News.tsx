@@ -8,7 +8,6 @@ import { Feather, FontAwesome } from '@expo/vector-icons';
 import { useWindowDimensions } from 'react-native';
 import ShareNews from './ShareNews';
 import TextToSpeech from './TextToSpeech';
-import { ThemedText } from './ThemedText';
 
 export function News({ news }: {
   news: any
@@ -39,7 +38,7 @@ export function News({ news }: {
 
       </View>}
       <View className="p-4">
-        <ThemedText type="subtitle">{news.title}</ThemedText>
+        <Text className="text-xl font-bold">{news.title}</Text>
 
         <View className='my-4 flex-row justify-between'>
           <Pressable className='px-2 py-1 bg-blue-700 '>
@@ -57,15 +56,15 @@ export function News({ news }: {
         </View>
 
 
-        <ThemedText>{news.description}</ThemedText>
+        <Text className='text-lg'>{news.description}</Text>
 
 
 
         {
           news.source_link &&
 
-          <View className='flex-row my-4'>
-            <Text className="dark:text-gray-100">{showTimeAgo(news.created_at) + " via "}
+          <View className='flex-row my-4 '>
+            <Text className="dark:text-gray-100 text-sm">{showTimeAgo(news.created_at) + " via "}
 
               <Link href={"/(tabs)/source?url=" + news.source_link}>{
 

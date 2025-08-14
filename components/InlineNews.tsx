@@ -1,8 +1,7 @@
 import { getDomain, showTimeAgo } from '@/scripts/utilities';
 import { router } from 'expo-router';
 import React from 'react';
-import { Image, Pressable, View } from 'react-native';
-import { ThemedText } from './ThemedText';
+import { Image, Pressable, Text, View } from 'react-native';
 
 export function InlineNews({ news }: { news: any }) {
   return (
@@ -14,7 +13,7 @@ export function InlineNews({ news }: { news: any }) {
      {!news.image &&  <View className="bg-gray-300 opacity-70 w-1/4 h-[100] animate-pulse"></View>}
 
     <View className="pl-4 pr-2 pt-1 pb-2 w-3/4">
-      <ThemedText className="text-sm font-semibold">{news.title}</ThemedText>
+      <Text className="text-lg font-medium">{news.title}</Text>
 
 
 
@@ -23,7 +22,7 @@ export function InlineNews({ news }: { news: any }) {
         news.source_link &&
 
         <Pressable
-          className="dark:text-gray-100 text-sm"
+          className="dark:text-gray-100 "
           onTouchEnd={() => {
             router.push(
               {
@@ -36,7 +35,7 @@ export function InlineNews({ news }: { news: any }) {
           }}
 
         >
-            <ThemedText>{showTimeAgo(news.created_at) + " | " + getDomain(news.source_link)}</ThemedText>
+            <Text className='text-sm'>{showTimeAgo(news.created_at) + " | " + getDomain(news.source_link)}</Text>
 
         </Pressable>
 

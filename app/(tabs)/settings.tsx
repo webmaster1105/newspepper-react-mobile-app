@@ -1,3 +1,4 @@
+import AuthButtons from '@/components/AuthButton';
 import Avatar from '@/components/Avatar';
 import LanguageSelector from '@/components/LanguageSelector';
 import { auth } from '@/firebase.config';
@@ -89,7 +90,7 @@ const Settings = () => {
 
   return (
     <SafeAreaView className="flex px-4">
-      <ScrollView className="px-4 pt-6">
+      <ScrollView className="px-4 pt-6 mb-10">
         <View className="bg-white dark:bg-neutral-900 rounded my-10 px-4 py-8 shadow-sm">
           {!authUser &&
             <View className="flex-col justify-between items-center py-3">
@@ -150,21 +151,21 @@ const Settings = () => {
         </View>
 
         <View className="bg-white dark:bg-neutral-900 rounded mb-6 p-4 shadow-sm ">
-            <Text className="text-gray-500 font-bold mb-2 border-b border-gray-200 pb-2 dark:text-gray-100">{t('activity')}</Text>
+          <Text className="text-gray-500 font-bold mb-2 border-b border-gray-200 pb-2 dark:text-gray-100">{t('activity')}</Text>
 
 
 
-            <TouchableOpacity className="py-3 dark:border-neutral-950"
+          <TouchableOpacity className="py-3 dark:border-neutral-950"
+          >
+
+            <Link href="/(tabs)/SavedNewsScrollList"
             >
+              <Text className="text-gray-800 dark:text-gray-100">{t('bookmarkedNews')}</Text>
+            </Link>
 
-              <Link href="/(tabs)/SavedNewsScrollList"
-              >
-                <Text className="text-gray-800 dark:text-gray-100">{t('bookmarkedNews')}</Text>
-              </Link>
+          </TouchableOpacity>
 
-            </TouchableOpacity>
-            
-          </View>
+        </View>
 
         {authUser &&
           <View className="bg-white dark:bg-neutral-900 rounded mb-6 p-4 shadow-sm ">
@@ -213,24 +214,26 @@ const Settings = () => {
         }
 
 
-        
 
-        <View className="flex-1 justify-center items-center px-12">
+
+        <View className="flex-1 justify-center items-center px-12 mb-10">
           <Text className="dark:text-gray-100">
 
             <Link href={"/WebPage?url=https://newspepperapp.in/privacy-policy"}>Privacy Policy</Link>
             {" | "}
 
-            <Link href={"/WebPage?url=https://newspepperapp.in/terms-of-usage"}>Terms of usage</Link>
+            <Link href={"/WebPage?url=https://newspepperapp.in/terms-of-usage"}>Terms of usage mm</Link>
           </Text>
         </View>
 
 
       </ScrollView>
 
-     
-        {/* <BookmarkedNews /> */}
-      
+
+      {/* <BookmarkedNews /> */}
+
+      <AuthButtons />
+
 
     </SafeAreaView>
   );
